@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, jsonify, make_response
+from flask import Flask, request, redirect, jsonify, make_response, render_template
 from db import db, URL
 from utils import get_client_id, generate_short_code
 from datetime import datetime
@@ -9,7 +9,7 @@ with app.app_context():
     db.init_app(app)  # Initialize the app with the database
     db.create_all()   # Create the database tables
 
-BASE_URL = "http://localhost:5000/"
+BASE_URL = "http://127.0.0.1:5000/"
 request_counts = {}
 REQUEST_LIMIT = 5  # Max requests per day per IP + agent
 
@@ -48,6 +48,10 @@ def redirect_url(short_code):
         return jsonify({"error": "Short URL not found"}), 404
     
     return redirect(url_entry.original_url)
+
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

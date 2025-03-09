@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 70%;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4a6cf7;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .result-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .short-url {
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+        
+        <div class="input-group">
+            <input type="text" id="longUrl" placeholder="Enter your long URL here">
+            <button id="shortenBtn">Shorten</button>
+        </div>
+        
+        <div id="resultContainer" class="result-container">
+            <div class="short-url" id="shortUrl"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const longUrlInput = document.getElementById('longUrl');
+            const shortenBtn = document.getElementById('shortenBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const shortUrlEl = document.getElementById('shortUrl');
+            
+            shortenBtn.addEventListener('click', function() {
+                const longUrl = longUrlInput.value;
+                
+                fetch('/shorten', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: longUrl }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    shortUrlEl.textContent = data.short_url;
+                    resultContainer.style.display = 'block';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
